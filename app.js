@@ -1,14 +1,23 @@
 const connectDB = require('./config/db');
 const port = 3000;
 
-
 const express = require('express');
 const app = express();
-const registerLogin = require('./routes/registerLoginModel');
+
+// defining router
+const userRoute = require('./routes/userRoute');
+const registerLoginRoute = require('./routes/registerLoginModel');
 
 app.use(express.json());
 connectDB();
-app.use(registerLogin);
+
+// to make public folder static
+app.use("/public",express.static(__dirname + "/public"));
+
+//use router by express
+app.use(userRoute);
+app.use(registerLoginRoute);
+
 app.listen(port,()=>{
     console.log(`Server is running ${port}`)
 })
