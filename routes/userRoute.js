@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const userModel = require("../models/userModel");
+const userModel = require("../model/userModel");
 
 // api to save user data
 router.post("/users/savedata", (req, res) => {

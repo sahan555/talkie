@@ -7,6 +7,7 @@ const app = express();
 // defining router
 const userRoute = require('./routes/userRoute');
 const registerLoginRoute = require('./routes/registerLoginModel');
+const profileRoute = require('./routes/profileRoute');
 
 app.use(express.json());
 connectDB();
@@ -17,6 +18,7 @@ app.use("/public",express.static(__dirname + "/public"));
 //use router by express
 app.use(userRoute);
 app.use(registerLoginRoute);
+app.use(profileRoute);
 
 app.listen(port,()=>{
     console.log(`Server is running ${port}`)

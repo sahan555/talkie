@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const schema = mongoose.Schema;
-const profileSchema = new schema(
+const Schema = mongoose.Schema;
+const profileSchema = new Schema(
     {
         user:{
             type:Schema.Types.ObjectId,
