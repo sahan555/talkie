@@ -16,6 +16,12 @@ router.post(
     const data = req.body;
     const file = req.file;
     try {
+      const existingProfile = await profileModel.findOne({ user: req.userData._id });
+
+      if (existingProfile) {
+        return res.status(400).json({ error: "Profile already exists" });
+      }
+
       if (!file || file.length === 0) {
         return res.status(400).send("Please upload an image");
       }
@@ -23,7 +29,7 @@ router.post(
       const profile = new profileModel({
         user: req.userData._id, // req.userData in auth js ma banako xa
         name: data.name,
-        contact: data.address,
+        contact: data.contact,
         address: data.address,
         dob: data.dob,
         profileimage: image,
@@ -56,11 +62,10 @@ router.put(
         profile.name = data.name ? data.name : profile.name;
         profile.contact = data.contact ? data.contact : profile.contact;
         profile.address = data.address ? data.address : profile.address;
-        profile.profilepic = profile.profilepic;
         const updatedProfile = await profile.save();
         res.json({ msg: "profile updated", success: true, updatedProfile });
       } else {
-        const image = domain + "/public/profiles" + file.filename;
+        const image = domain + "/public/profiles/" + file.filename;
         profile.name = data.name ? data.name : profile.name;
         profile.profileimage = image ? image : profile.profileimage;
         profile.contact = data.contact ? data.contact : profile.contact;

@@ -97,6 +97,13 @@ router.put('/users/async/update/:id',async (req,res) =>{
     }
 });
 
-
+router.delete("/users/deletedatas/:id", async (req, res) => {
+  try {
+    const user = await userModel.findByIdAndDelete(req.params.id);
+    res.json({ msg: "data deleted successfully", success: true, user });
+  } catch (err) {
+    res.status(500).json({ msg: err.message, success: false });
+  }
+});
 
 module.exports = router;
