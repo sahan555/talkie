@@ -7,10 +7,9 @@ const categoriesSchema = new schema(
       required: true,
       trim: true,
       min: 3,
-      max: 20,
       unique: true,
     },
   },
   { timestamps: true }
 );
-module.exports = mongoose.model("user",categoriesSchema);
+module.exports = mongoose.model("category",categoriesSchema);

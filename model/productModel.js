@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const schema = mongoose.Schema;
-const productSchema = new schema(
+const Schema = mongoose.Schema;
+const productSchema = new Schema(
   {
     name: {
       type: String,
@@ -23,6 +23,11 @@ const productSchema = new schema(
     },
     productImg: {
       type: String,
+    },
+    category:{
+      type:Schema.type.ObjectId,
+      ref:"category",
+      require:true,
     }
     // profilePicture: {
     //   type: String,
