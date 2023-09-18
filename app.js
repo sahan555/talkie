@@ -8,7 +8,8 @@ const app = express();
 const userRoute = require('./routes/userRoute');
 const registerLoginRoute = require('./routes/registerLoginRoute');
 const profileRoute = require('./routes/profileRoute');
-
+const productRoute = require('./routes/productRoute');
+const categoryRoute = require('./routes/categoryRoute');
 
 app.use(express.json());
 connectDB();
