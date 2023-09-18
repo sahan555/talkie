@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const profileModel = require("../models/profileModel");
+const postModel = require("../models/postModel");
 const domain = "http://localhost:3000";
 const auth = require("../config/auth.js");
 const uploadServices = require("../services/uploadServices");
@@ -9,33 +9,22 @@ const uploadServices = require("../services/uploadServices");
 // @desc Create a profile
 // @access Private
 router.post(
-  "/user/profile/create",
-  uploadServices.profileImage.single("profilepic"),
+  "/user/post/create",
+  uploadServices.postImage.single("content"),
   auth.verifyUser,
   async (req, res) => {
-    const data = req.body;
     const file = req.file;
     try {
-      const existingProfile = await profileModel.findOne({ user: req.userData._id });
-
-      if (existingProfile) {
-        return res.status(400).json({ error: "Profile already exists" });
-      }
-
       if (!file || file.length === 0) {
         return res.status(400).send("Please upload an image");
       }
-      const image = domain + "/public/profiles/" + file.filename;
-      const profile = new profileModel({
+      const image = domain + "/public/post/" + file.filename;
+      const post = new postModel({
         user: req.userData._id, // req.userData in auth js ma banako xa
-        username: data.username,
-        fullname: data.fullname,
-        bio: data.bio,
-        dob: data.dob,
-        profilepic: image,
+        content: image,
       });
-      await profile.save();
-      res.status(200).json({ msg: "Profile created successfully", profile });
+      await post.save();
+      res.status(200).json({ msg: "post created successfully", post });
     } catch (err) {
       console.log(err);
       res.status(500).send("Server Error");
@@ -46,15 +35,14 @@ router.post(
 // @desc update a profile
 // @access Private
 router.put(
-  "/user/profile/update",
-  uploadServices.profileImage.single("profilepic"),
+  "/user/post/update",
+  uploadServices.profileImage.single("content"),
   auth.verifyUser,
   async (req, res) => {
-    const data = req.body;
     const file = req.file;
     try {
-      const profile = await profileModel.findOne({ user: req.userData._id });
-      if (!profile) {
+      const post = await postModel.findOne({ user: req.userData._id });
+      if (!post) {
         res.status(400).json({ msg: "profile not found" });
         return;
       }

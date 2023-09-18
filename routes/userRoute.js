@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const userModel = require("../model/userModel");
+const userModel = require("../models/userModel");
 
 // api to save user data
-router.post("/users/savedata", (req, res) => {
+router.post("/user/savedata", (req, res) => {
   const data = req.body;
   if (!data) {
     res.status(400).json({ msg: "Data not found" });
@@ -14,9 +14,6 @@ router.post("/users/savedata", (req, res) => {
     email: data.email,
     password: data.password,
     role: data.role,
-    contactNumber: data.contactNumber,
-    // age:req.body.age,
-    age: data.age,
   });
 
   user
@@ -31,7 +28,7 @@ router.post("/users/savedata", (req, res) => {
 });
 
 // api to get all user data
-router.get("/users/getdata", (req, res) => {
+router.get("/user/getdata", (req, res) => {
     userModel
     .find()
     .then((data) => {
@@ -42,7 +39,7 @@ router.get("/users/getdata", (req, res) => {
       res.status(500).json({ msg: err, success: false });
     });
 });
-router.get("/users/getdata/:id", (req, res) => {
+router.get("/user/getdata/:id", (req, res) => {
     userModel.findById(req.params.id)
     .find()
     .then((data) => {
@@ -55,7 +52,7 @@ router.get("/users/getdata/:id", (req, res) => {
 });
 
 //async method to get
-router.get('/users/async/getdata', async (req,res)=>{
+router.get('/user/async/getdata', async (req,res)=>{
     try{
         const user = await userModel.find();
         res.json({msg:'data fetched successguly',success:true,user})
@@ -63,7 +60,7 @@ router.get('/users/async/getdata', async (req,res)=>{
         res.status(500).json({msg:e.message,success:false});
     }
 });
-router.get('/users/async/getdata/:id', async (req,res)=>{
+router.get('/user/async/getdata/:id', async (req,res)=>{
     try{
         const user = await userModel.findById(req.params.id);
         res.json( {msg:'data fetched successguly',success:true,user})
@@ -72,7 +69,7 @@ router.get('/users/async/getdata/:id', async (req,res)=>{
     }
 });
 
-router.put('/users/async/update/:id',async (req,res) =>{
+router.put('/user/async/update/:id',async (req,res) =>{
     const data = req.body;
     const user = await userModel.findById(req.params.id);
     if(!data){
@@ -88,8 +85,6 @@ router.put('/users/async/update/:id',async (req,res) =>{
         user.email = data.email ? data.email : user.email;
         user.password = data.password ? data.password : user.password;
         user.role = data.role ? data.role : user.role;
-        user.contactNumber = data.contactNumber ? data.contactNumber : user.contactNumber;
-        user.age = data.age ? data.age : user.age;
         const updatedUser = await user.save();
         res.json({msg:"Data updated",success:true,updatedUser});
     }catch(e){
@@ -97,7 +92,7 @@ router.put('/users/async/update/:id',async (req,res) =>{
     }
 });
 
-router.delete("/users/deletedatas/:id", async (req, res) => {
+router.delete("/user/deletedatas/:id", async (req, res) => {
   try {
     const user = await userModel.findByIdAndDelete(req.params.id);
     res.json({ msg: "data deleted successfully", success: true, user });
