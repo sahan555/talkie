@@ -24,15 +24,6 @@ const userSchema = new schema(
       type: String,
       enum: ["user", "admin"],
       default: "user",
-    },
-    contactNumber: {
-      type: String,
-    },
-    // profilePicture: {
-    //   type: String,
-    // },
-    age:{
-      type:String,
     }
   },
   { timestamps: true }
