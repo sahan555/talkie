@@ -9,6 +9,7 @@ const userRoute = require('./routes/userRoute');
 const registerLoginRoute = require('./routes/registerLoginRoute');
 const profileRoute = require('./routes/profileRoute');
 const productRoute = require('./routes/productRoute');
+const categoryRoute = require('./routes/categoryRoute');
 
 app.use(express.json());
 connectDB();
@@ -21,6 +22,7 @@ app.use(userRoute);
 app.use(registerLoginRoute);
 app.use(profileRoute);
 app.use(productRoute);
+app.use(categoryRoute);
 
 app.listen(port,()=>{
     console.log(`Server is running ${port}`)

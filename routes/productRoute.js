@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const productModel = require("../model/productModel");
+const userModel = require("../model/userModel");
 const domain = "http://localhost:3000";
-// const auth = require("../config/auth.js");
+const auth = require("../config/auth.js");
 const uploadServices = require("../services/uploadServices");
 
 // @route POST profile/create by taking the ref of the user
@@ -11,10 +12,16 @@ const uploadServices = require("../services/uploadServices");
 router.post(
   "/product/create",
   uploadServices.productImage.single("productImg"),
-  // auth.verifyUser,
+  auth.verifyUser,
   async (req, res) => {
     const data = req.body;
     const file = req.file;
+    const admin = await userModel.findOne({ _id: req.userData._id });
+    if (admin.role !== "admin") {
+      return res
+        .status(400)
+        .json({ error: "You are not authorized to create category" });
+    }
     try {
       const existingProduct = await productModel.findOne({ name: data.name });
 
@@ -26,6 +33,7 @@ router.post(
       }
       const image = domain + "/public/product/" + file.filename;
       const product = new productModel({
+        category:req.userData._id,
         name: data.name,
         price: data.price,
         details: data.details,
@@ -46,12 +54,17 @@ router.post(
 router.put(
   "/product/update/:id",
   uploadServices.productImage.single("productImg"),
-  // auth.verifyUser,
+  auth.verifyUser,
   async (req, res) => {
     const data = req.body;
     const file = req.file;
+    const admin = await userModel.findOne({ _id: req.userData._id });
+    if (admin.role !== "admin") {
+      return res
+        .status(400)
+        .json({ error: "You are not authorized to create category" });
+    }
     try {
-
       const product = await productModel.findById(req.params.id);
       if (!product) {
         res.status(400).json({ msg: "product not found" });
@@ -88,46 +101,42 @@ router.put(
 // @route GET profile/get
 // @desc Get a profile
 // @access Private
-router.get(
-  "/product/get",
-  // auth.verifyUser,
-  async (req, res) => {
-    try {
-      const product = await productModel.find();
-      if (!product) {
-        return res.status(400).send("product not found");
-      }
-      res.json({ msg: "product fetched", success: true, product });
-    } catch (err) {
-      console.log(err);
-      res.status(500).send("Server Error");
+router.get("/product/get", auth.verifyUser, async (req, res) => {
+  try {
+    const product = await productModel.find();
+    if (!product) {
+      return res.status(400).send("product not found");
     }
+    res.json({ msg: "product fetched", success: true, product });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Server Error");
   }
-);
-router.get(
-  "/product/get/:id",
-  // auth.verifyUser,
-  async (req, res) => {
-    try {
-      const product = await productModel.findById(req.params.id);
-      if (!product) {
-        return res.status(400).send("product not found");
-      }
-      res.json({ msg: "product fetched", success: true, product });
-    } catch (err) {
-      console.log(err);
-      res.status(500).send("Server Error");
+});
+router.get("/product/get/:id", auth.verifyUser, async (req, res) => {
+  try {
+    const product = await productModel.findById(req.params.id);
+    if (!product) {
+      return res.status(400).send("product not found");
     }
+    res.json({ msg: "product fetched", success: true, product });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Server Error");
   }
-);
+});
 
 // code for delete the profile by taking the ref of the user
 // @route DELETE profile/delete
 // @desc Delete a profile
 // @access Private
-router.delete("/product/delete/:id",
-//  auth.verifyUser,
- async (req, res) => {
+router.delete("/product/delete/:id", auth.verifyUser, async (req, res) => {
+  const admin = await userModel.findOne({ _id: req.userData._id });
+  if (admin.role !== "admin") {
+    return res
+      .status(400)
+      .json({ error: "You are not authorized to create category" });
+  }
   try {
     const product = await productModel.findByIdAndDelete(req.params.id);
     res.json({ msg: "product deleted successfully", success: true, product });

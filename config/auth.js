@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken");
-
 const userModel = require("../model/userModel");
 
 //guard
