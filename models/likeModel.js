@@ -2,9 +2,9 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const likeSchema = new Schema(
   {
-    profile:{
+    user:{
       type:Schema.Types.ObjectId,
-      ref:"profiles",
+      ref:"user",
       require:true,
     },
     post:{

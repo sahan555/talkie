@@ -5,9 +5,9 @@ const postSchema = new Schema(
     content: {
       type: String,
     },
-    profile:{
+    user:{
       type:Schema.Types.ObjectId,
-      ref:"profiles",
+      ref:"user",
       require:true,
     }
   },
