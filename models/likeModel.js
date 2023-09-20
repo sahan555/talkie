@@ -4,7 +4,7 @@ const likeSchema = new Schema(
   {
     user:{
       type:Schema.Types.ObjectId,
-      ref:"user",
+      ref:"users",
       require:true,
     },
     post:{

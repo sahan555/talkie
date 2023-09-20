@@ -43,26 +43,18 @@ router.put(
     try {
       const post = await postModel.findOne({ user: req.userData._id });
       if (!post) {
-        res.status(400).json({ msg: "profile not found" });
+        res.status(400).json({ msg: "post not found" });
         return;
       }
       if (!file || file.length === 0) {
-        profile.username = data.username ? data.username : profile.username;
-        profile.fullname = data.fullname ? data.fullname : profile.fullname;
-        profile.bio = data.bio ? data.bio : profile.bio;
-        profile.dob = data.dob ? data.dob : profile.dob;
-        const updatedProfile = await profile.save();
-        res.json({ msg: "profile updated", success: true, updatedProfile });
+        const updatedPost = await post.save();
+        res.json({ msg: "post updated", success: true, updatedPost });
       } 
       else {
-        const image = domain + "/public/profiles/" + file.filename;
-        profile.username = data.username ? data.username : profile.username;
-        profile.fullname = data.fullname ? data.fullname : profile.fullname;
-        profile.bio = data.bio ? data.bio : profile.bio;
-        profile.dob = data.dob ? data.dob : profile.dob;
-        profile.profilepic = image ? image : profile.profilepic;
-        const updatedProfile = await profile.save();
-        res.json({ msg: "Profile updated", success: true, updatedProfile });
+        const image = domain + "/public/post/" + file.filename;
+        post.content = image ? image : post.content;
+        const updatedPost = await post.save();
+        res.json({ msg: "post updated", success: true, updatedPost });
       }
     } catch (e) {
       res.status(500).json({ msg: e.message, success: false });
@@ -73,13 +65,13 @@ router.put(
 // @route GET profile/get
 // @desc Get a profile
 // @access Private
-router.get("/user/profile/get", auth.verifyUser, async (req, res) => {
+router.get("/user/post/get", auth.verifyUser, async (req, res) => {
   try {
-    const profile = await profileModel.findOne({ user: req.userData._id });
-    if (!profile) {
-      return res.status(400).send("Profile not found");
+    const post = await postModel.findOne({ user: req.userData._id });
+    if (!post) {
+      return res.status(400).send("post not found");
     }
-    res.json({ msg: "profile fetched", success: true, profile });
+    res.json({ msg: "post fetched", success: true, post });
   } catch (err) {
     console.log(err);
     res.status(500).send("Server Error");
@@ -90,14 +82,14 @@ router.get("/user/profile/get", auth.verifyUser, async (req, res) => {
 // @route DELETE profile/delete
 // @desc Delete a profile
 // @access Private
-router.delete("/user/profile/delete", auth.verifyUser, async (req, res) => {
+router.delete("/user/post/delete", auth.verifyUser, async (req, res) => {
   try {
-    const profile = await profileModel.findOne({ user: req.userData._id });
-    if (!profile) {
-      return res.status(400).send("Profile not found");
+    const post = await postModel.findOne({ user: req.userData._id });
+    if (!post) {
+      return res.status(400).send("post not found");
     }
-    await profile.deleteOne;
-    res.json({ msg: "profile deleted", success: true });
+    await post.deleteOne;
+    res.json({ msg: "post deleted", success: true });
   } catch (err) {
     console.log(err);
     res.status(500).send("Server Error");
