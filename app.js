@@ -3,13 +3,13 @@ const port = 5000;
 
 const express = require('express');
 const app = express();
-
+const cors = require('cors');
 // defining router
 const userRoute = require('./routes/userRoute');
 const registerLoginRoute = require('./routes/registerLoginRoute');
 const profileRoute = require('./routes/profileRoute');
 const postRoute = require('./routes/postRoute');
-
+app.use(cors());
 
 app.use(express.json());
 connectDB();

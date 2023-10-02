@@ -10,7 +10,7 @@ const uploadServices = require("../services/uploadServices");
 // @access Private
 router.post(
   "/user/profile/create",
-  uploadServices.profileImage.single("profilepic"),
+  uploadServices.profileImage.single("image"),
   auth.verifyUser,
   async (req, res) => {
     const data = req.body;
